@@ -27,6 +27,13 @@
             background: white;
             padding: 10px;
         }
+
+        #news {
+            background: lightgray;
+            padding: 10px;
+            margin: 10px;
+            color: rgb(5, 5, 77)
+        }
     </style>
 </head>
 
@@ -98,21 +105,35 @@
                 'q': searchTerm,
                 'page': 1,
                 'begin_date': beginDate,
-                'end_date': "20011112"
+                'end_date': endDate
             });
+
             $.ajax({
                 url: url,
                 method: 'GET',
             }).done(function (result) {
                 console.log(result);
                 var res = result.response;
-                var headline = res.docs[0].headline.kicker;
-                var author = res.docs[0].byline.original;
-                //var section = res.docs[0].section_name;
 
+
+                for (var i = 1; i <= recordsNumber; i++) {
+                    // variables for response obj
+                    var headline = res.docs[i].headline.main;
+                    var author = res.docs[i].byline.original;
+                    // section = res.docs[0].section_name;
+                    var newDiv = $("<div id='news'>");
+                    newDiv.append("<p><h3>" + i + ". " + headline + "</h3></p>");
+                    newDiv.append("<p>" + author);
+                    $("#placeholder").append(newDiv);
+                }
             }).fail(function (err) {
                 throw err;
             })
+        });
+
+        $("#clear-results").on("click",function(){
+            e.preventDefault();
+            $("#placeholder").empty();
         });
     </script>
 </body>
